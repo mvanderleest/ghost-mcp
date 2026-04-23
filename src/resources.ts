@@ -192,6 +192,26 @@ export const handlePostResource: ReadResourceTemplateCallback = async (uri: URL,
     }
 };
 
+// Handler for the page resource
+export const handlePageResource: ReadResourceTemplateCallback = async (uri: URL, variables: Variables): Promise<any> => {
+    try {
+        const pageId = variables.page_id as string;
+        if (!pageId) {
+            throw new Error("Missing page_id parameter");
+        }
+        return {
+            contents: [{
+                uri: uri.href,
+                text: `Page resource requested for ID: ${pageId}`,
+                mimeType: 'text/plain'
+            }]
+        };
+    } catch (error) {
+        console.error(`Error fetching page ${variables.page_id}:`, error);
+        throw error;
+    }
+};
+
 // Handler for the blog info resource
 export async function handleBlogInfoResource(uri: URL): Promise<any> {
     try {

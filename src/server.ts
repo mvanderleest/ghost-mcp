@@ -10,6 +10,7 @@ import {
     handleOfferResource,
     handleNewsletterResource,
     handlePostResource,
+    handlePageResource,
     handleBlogInfoResource
 } from './resources'; // Import resource handlers
 
@@ -32,6 +33,7 @@ server.resource("tier", new ResourceTemplate("tier://{tier_id}", { list: undefin
 server.resource("offer", new ResourceTemplate("offer://{offer_id}", { list: undefined }), handleOfferResource);
 server.resource("newsletter", new ResourceTemplate("newsletter://{newsletter_id}", { list: undefined }), handleNewsletterResource);
 server.resource("post", new ResourceTemplate("post://{post_id}", { list: undefined }), handlePostResource);
+server.resource("page", new ResourceTemplate("page://{page_id}", { list: undefined }), handlePageResource);
 server.resource("blog-info", "blog://info", handleBlogInfoResource);
 
 // Register tools
@@ -56,6 +58,8 @@ import { registerRoleTools } from "./tools/roles";
 registerRoleTools(server);
 import { registerWebhookTools } from "./tools/webhooks";
 registerWebhookTools(server);
+import { registerPageTools } from "./tools/pages";
+registerPageTools(server);
 
 import { registerPrompts } from "./prompts";
 registerPrompts(server);
