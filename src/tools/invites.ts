@@ -1,7 +1,9 @@
 // src/tools/invites.ts
 import { z } from "zod";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { ghostApiClient } from "../ghostApi";
+import { createGhostRestClient } from "../ghostApi";
+
+const invitesClient = createGhostRestClient('invites');
 
 // Parameter schemas as ZodRawShape (object literals)
 const browseParams = {
@@ -24,7 +26,7 @@ export function registerInviteTools(server: McpServer) {
     "invites_browse",
     browseParams,
     async (args, _extra) => {
-      const invites = await ghostApiClient.invites.browse(args);
+      const invites = await invitesClient.browse(args);
       return {
         content: [
           {
@@ -41,7 +43,7 @@ export function registerInviteTools(server: McpServer) {
     "invites_add",
     addParams,
     async (args, _extra) => {
-      const invite = await ghostApiClient.invites.add(args);
+      const invite = await invitesClient.add(args);
       return {
         content: [
           {
@@ -58,7 +60,7 @@ export function registerInviteTools(server: McpServer) {
     "invites_delete",
     deleteParams,
     async (args, _extra) => {
-      await ghostApiClient.invites.delete(args);
+      await invitesClient.delete(args);
       return {
         content: [
           {

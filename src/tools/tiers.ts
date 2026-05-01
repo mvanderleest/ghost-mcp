@@ -1,7 +1,9 @@
 // src/tools/tiers.ts
 import { z } from "zod";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { ghostApiClient } from "../ghostApi";
+import { createGhostRestClient } from "../ghostApi";
+
+const tiersClient = createGhostRestClient('tiers');
 
 // Parameter schemas as ZodRawShape (object literals)
 const browseParams = {
@@ -49,7 +51,7 @@ export function registerTierTools(server: McpServer) {
     "tiers_browse",
     browseParams,
     async (args, _extra) => {
-      const tiers = await ghostApiClient.tiers.browse(args);
+      const tiers = await tiersClient.browse(args);
       return {
         content: [
           {
@@ -66,7 +68,7 @@ export function registerTierTools(server: McpServer) {
     "tiers_read",
     readParams,
     async (args, _extra) => {
-      const tier = await ghostApiClient.tiers.read(args);
+      const tier = await tiersClient.read(args);
       return {
         content: [
           {
@@ -83,7 +85,7 @@ export function registerTierTools(server: McpServer) {
     "tiers_add",
     addParams,
     async (args, _extra) => {
-      const tier = await ghostApiClient.tiers.add(args);
+      const tier = await tiersClient.add(args);
       return {
         content: [
           {
@@ -100,7 +102,7 @@ export function registerTierTools(server: McpServer) {
     "tiers_edit",
     editParams,
     async (args, _extra) => {
-      const tier = await ghostApiClient.tiers.edit(args);
+      const tier = await tiersClient.edit(args);
       return {
         content: [
           {
@@ -117,7 +119,7 @@ export function registerTierTools(server: McpServer) {
     "tiers_delete",
     deleteParams,
     async (args, _extra) => {
-      await ghostApiClient.tiers.delete(args);
+      await tiersClient.delete(args);
       return {
         content: [
           {

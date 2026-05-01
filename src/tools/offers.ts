@@ -1,7 +1,9 @@
 // src/tools/offers.ts
 import { z } from "zod";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { ghostApiClient } from "../ghostApi";
+import { createGhostRestClient } from "../ghostApi";
+
+const offersClient = createGhostRestClient('offers');
 
 // Parameter schemas as ZodRawShape (object literals)
 const browseParams = {
@@ -46,7 +48,7 @@ export function registerOfferTools(server: McpServer) {
     "offers_browse",
     browseParams,
     async (args, _extra) => {
-      const offers = await ghostApiClient.offers.browse(args);
+      const offers = await offersClient.browse(args);
       return {
         content: [
           {
@@ -63,7 +65,7 @@ export function registerOfferTools(server: McpServer) {
     "offers_read",
     readParams,
     async (args, _extra) => {
-      const offer = await ghostApiClient.offers.read(args);
+      const offer = await offersClient.read(args);
       return {
         content: [
           {
@@ -80,7 +82,7 @@ export function registerOfferTools(server: McpServer) {
     "offers_add",
     addParams,
     async (args, _extra) => {
-      const offer = await ghostApiClient.offers.add(args);
+      const offer = await offersClient.add(args);
       return {
         content: [
           {
@@ -97,7 +99,7 @@ export function registerOfferTools(server: McpServer) {
     "offers_edit",
     editParams,
     async (args, _extra) => {
-      const offer = await ghostApiClient.offers.edit(args);
+      const offer = await offersClient.edit(args);
       return {
         content: [
           {
@@ -114,7 +116,7 @@ export function registerOfferTools(server: McpServer) {
     "offers_delete",
     deleteParams,
     async (args, _extra) => {
-      await ghostApiClient.offers.delete(args);
+      await offersClient.delete(args);
       return {
         content: [
           {
