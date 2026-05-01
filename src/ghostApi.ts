@@ -11,7 +11,7 @@ export const ghostApiClient = new GhostAdminAPI({
 
 // Ghost Admin API JWT — signed with the secret half of the Admin API key.
 // Uses only Node's built-in crypto so no extra dependency is needed.
-function generateGhostToken(): string {
+export function generateGhostToken(): string {
     const [id, secret] = GHOST_ADMIN_API_KEY.split(':');
     const now = Math.floor(Date.now() / 1000);
     const header = Buffer.from(JSON.stringify({ alg: 'HS256', kid: id, typ: 'JWT' })).toString('base64url');
