@@ -59,6 +59,7 @@ const postMutableFields = {
   canonical_url: z.string().optional(),
   tags: z.array(tagRef).optional(),
   authors: z.array(authorRef).optional(),
+  email_segment: z.string().optional(),
 };
 const addParams = {
   title: z.string(),
