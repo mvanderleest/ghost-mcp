@@ -60,6 +60,7 @@ const postMutableFields = {
   tags: z.array(tagRef).optional(),
   authors: z.array(authorRef).optional(),
   email_segment: z.string().optional(),
+  newsletter: z.object({ id: z.string() }).optional(),
 };
 const addParams = {
   title: z.string(),
