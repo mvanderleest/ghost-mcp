@@ -116,9 +116,12 @@ export function registerPostTools(server: McpServer) {
     "posts_add",
     addParams,
     async (args, _extra) => {
-      // If html is present, use source: "html" to ensure Ghost uses the html content
-      const options = args.html ? { source: "html" } : undefined;
-      const post = await ghostApiClient.posts.add(args, options);
+      const { newsletter, email_segment, ...bodyArgs } = args;
+      const queryParams: Record<string, unknown> = {};
+      if (args.html) queryParams.source = "html";
+      if (newsletter) queryParams.newsletter = newsletter.id;
+      if (email_segment) queryParams.email_segment = email_segment;
+      const post = await ghostApiClient.posts.add(bodyArgs, queryParams);
       return {
         content: [
           {
@@ -135,9 +138,12 @@ export function registerPostTools(server: McpServer) {
     "posts_edit",
     editParams,
     async (args, _extra) => {
-      // If html is present, use source: "html" to ensure Ghost uses the html content for updates
-      const options = args.html ? { source: "html" } : undefined;
-      const post = await ghostApiClient.posts.edit(args, options);
+      const { newsletter, email_segment, ...bodyArgs } = args;
+      const queryParams: Record<string, unknown> = {};
+      if (args.html) queryParams.source = "html";
+      if (newsletter) queryParams.newsletter = newsletter.id;
+      if (email_segment) queryParams.email_segment = email_segment;
+      const post = await ghostApiClient.posts.edit(bodyArgs, queryParams);
       return {
         content: [
           {
