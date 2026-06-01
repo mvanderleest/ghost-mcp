@@ -76,6 +76,20 @@ const deleteParams = {
   id: z.string(),
 };
 
+// Ghost's `?newsletter=` query param expects the newsletter SLUG, not its id
+// (https://docs.ghost.org/admin-api/posts/sending-a-post). The MCP tool contract
+// takes { id }, so resolve id -> slug. If the value already is a slug (or the
+// lookup fails for any reason), fall back to passing it through unchanged.
+async function resolveNewsletterSlug(idOrSlug: string): Promise<string> {
+  try {
+    const nl = await ghostApiClient.newsletters.read({ id: idOrSlug });
+    if (nl && nl.slug) return nl.slug;
+  } catch {
+    // fall through
+  }
+  return idOrSlug;
+}
+
 export function registerPostTools(server: McpServer) {
   // Browse posts
   server.tool(
@@ -119,7 +133,10 @@ export function registerPostTools(server: McpServer) {
       const { newsletter, email_segment, ...bodyArgs } = args;
       const queryParams: Record<string, unknown> = {};
       if (args.html) queryParams.source = "html";
-      if (newsletter) queryParams.newsletter = newsletter.id;
+      // Ghost's `newsletter` query param resolves by SLUG, not id. The tool
+      // contract accepts { id }, so resolve id -> slug here. Fall back to the
+      // provided value if the lookup fails (caller may have passed a slug).
+      if (newsletter) queryParams.newsletter = await resolveNewsletterSlug(newsletter.id);
       if (email_segment) queryParams.email_segment = email_segment;
       const post = await ghostApiClient.posts.add(bodyArgs, queryParams);
       return {
@@ -141,7 +158,8 @@ export function registerPostTools(server: McpServer) {
       const { newsletter, email_segment, ...bodyArgs } = args;
       const queryParams: Record<string, unknown> = {};
       if (args.html) queryParams.source = "html";
-      if (newsletter) queryParams.newsletter = newsletter.id;
+      // Ghost's `newsletter` query param resolves by SLUG, not id. See note in posts_add.
+      if (newsletter) queryParams.newsletter = await resolveNewsletterSlug(newsletter.id);
       if (email_segment) queryParams.email_segment = email_segment;
       const post = await ghostApiClient.posts.edit(bodyArgs, queryParams);
       return {
